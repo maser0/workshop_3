@@ -1,11 +1,9 @@
 package pl.coderslab.workshop.controller;
 
+import pl.coderslab.workshop.dao.ExerciseDao;
 import pl.coderslab.workshop.dao.GroupDao;
-
-import pl.coderslab.workshop.dao.SolutionDao;
+import pl.coderslab.workshop.model.Exercise;
 import pl.coderslab.workshop.model.Group;
-import pl.coderslab.workshop.model.Solution;
-
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,16 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "edit-group", urlPatterns = "/editGroup")
-public class EditGroupController extends HttpServlet {
+@WebServlet(name = "edit-exercisse", urlPatterns = "/editExercise")
+public class EditExerciseController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParameter = request.getParameter("id");
         int id = Integer.parseInt(idParameter);
-        GroupDao groupDao = new GroupDao();
-        Group group = groupDao.readGroup(id);
-        request.setAttribute("group", group);
-        request.getRequestDispatcher("/edit-solution.jsp")
+        ExerciseDao exerciseDao = new ExerciseDao();
+       Exercise exercise = exerciseDao.read(id);
+        request.setAttribute("exercise", exercise);
+        request.getRequestDispatcher("/edit-exercise.jsp")
                 .forward(request, response);
     }
 
@@ -31,12 +29,14 @@ public class EditGroupController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParameter = request.getParameter("id");
         int id = Integer.parseInt(idParameter);
-        GroupDao groupDao = new GroupDao();
-        Group group = groupDao.readGroup(id);
+        ExerciseDao exerciseDao = new ExerciseDao();
+        Exercise exercise = exerciseDao.read(id);
 
-        String nameParameter = request.getParameter("name");
-        group.setName(nameParameter);
-        groupDao.update(group);
-        response.sendRedirect("/group?id=" + idParameter);
+        String titleParameter = request.getParameter("title");
+        String descriptionParameter = request.getParameter("description");
+
+        exercise.setTitle(titleParameter);
+        exercise.setDescription(descriptionParameter);
+
     }
 }
